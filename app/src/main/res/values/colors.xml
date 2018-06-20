@@ -9,5 +9,8 @@
     <color name="white">#FFF</color>
     <color name="blue">#09c6df</color>
 
+    <color name="success">#00FF00</color>
+    <color name="unsuccess">#FF0000</color>
+
 
 </resources>

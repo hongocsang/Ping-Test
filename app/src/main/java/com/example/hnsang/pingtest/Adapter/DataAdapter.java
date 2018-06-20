@@ -56,8 +56,8 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder
                 public void onClick(View view) {
                     Intent intent = new Intent(context, GraphPingActivity.class);
                     intent.putExtra("idDevice",dataObject.getIdDevice());
-                    intent.putExtra("idUserName",dataObject.getUsername());
-                    intent.putExtra("idTimeStart",dataObject.getTimeStart());
+                    intent.putExtra("UserName",dataObject.getUsername());
+                    intent.putExtra("TimeStart",dataObject.getTimeStart());
                     context.startActivity(intent);
                 }
             });
