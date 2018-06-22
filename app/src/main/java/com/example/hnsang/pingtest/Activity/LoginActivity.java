@@ -75,7 +75,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                 if (rs.next()) {
                     Intent intent = new Intent(this, MainActivity.class);
-                    //intent.putExtra("idnhanvien", name);
+                    finish();
+                    //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
 
                 } else {
@@ -174,7 +175,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         Log.i("hnsangsang", "Đăng Nhập Thành Công");
 
                         Intent intent = new Intent(this, MainActivity.class);
+                        //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         intent.putExtra("idnhanvien", userName);
+                        finish();
                         startActivity(intent);
 
                     } else {

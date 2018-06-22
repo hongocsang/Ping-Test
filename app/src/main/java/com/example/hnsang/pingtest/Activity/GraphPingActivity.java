@@ -9,6 +9,7 @@ import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.example.hnsang.pingtest.Database.ConnectionDB;
 import com.example.hnsang.pingtest.Object.Constant;
@@ -17,6 +18,7 @@ import com.example.hnsang.pingtest.R;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
@@ -32,6 +34,7 @@ import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.MPPointF;
 
 import java.sql.Connection;
@@ -44,17 +47,28 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class GraphPingActivity extends AppCompatActivity { //implements OnChartGestureListener, OnChartValueSelectedListener {
+public class GraphPingActivity extends AppCompatActivity {
 
-    private PieChart mPieChartTotal;
-    private LineChart mLineChartPing;
+    private PieChart mPCTotal;
+    private LineChart mLCPing;
+    private LineChart mLCPacket;
+
+    private TextView mTVUserName;
 
     private ArrayList<PieEntry> mTotalList = new ArrayList<>();
     private ArrayList<Entry> mPingList = new ArrayList<>();
+    private ArrayList<Entry> mSuccessList = new ArrayList<>();
+    private ArrayList<Entry> mUnSuccessList = new ArrayList<>();
 
+    private int mPing = 0;
+    private int mTotal = 0;
+    private int mSuccess = 0;
+    private int mUnSuccess = 0;
+    private int mCountData = 0;
 
-    private int ping = 0;
-
+    private String mStrIdDevice;
+    private String mStrUserName;
+    private String mStrTimeStart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,26 +77,31 @@ public class GraphPingActivity extends AppCompatActivity { //implements OnChartG
 
         mAddControl();
 
+        mLoadData();
+
         reload();
-
-
     }
 
     private void mAddControl() {
 
-        mPieChartTotal = findViewById(R.id.pc_total);
-        mLineChartPing = findViewById(R.id.lc_ping);
-        mTotalList.clear();
-        mPingList.clear();
+        mPCTotal = findViewById(R.id.pc_total);
+        mLCPing = findViewById(R.id.lc_ping);
+        mLCPacket = findViewById(R.id.lc_packet);
+        mTVUserName = findViewById(R.id.tv_username);
+
 
         Intent intent = getIntent();
-        String idDevice = intent.getStringExtra("idDevice");
-        String userName = intent.getStringExtra("UserName");
-        String timeStart = intent.getStringExtra("TimeStart");
+        mStrIdDevice = intent.getStringExtra("idDevice");
+        mStrUserName = intent.getStringExtra("UserName");
+        mStrTimeStart = intent.getStringExtra("TimeStart");
+        mTVUserName.setText(mStrUserName);
+    }
 
-        Log.i("kanna", idDevice);
-        Log.i("kanna", userName);
-        Log.i("kanna", timeStart);
+    private void mLoadData(){
+        mTotalList.clear();
+        mPingList.clear();
+        mSuccessList.clear();
+        mUnSuccessList.clear();
 
         ConnectionDB mConnectionDB = new ConnectionDB();
         Connection mConnection = mConnectionDB.CONN();
@@ -93,48 +112,48 @@ public class GraphPingActivity extends AppCompatActivity { //implements OnChartG
             } else {
                 String query = "select * " +
                         "from data " +
-                        "where iddevice='" + idDevice + "' and username ='" + userName + "' and timestart='" + timeStart + "'";
+                        "where iddevice='" + mStrIdDevice + "' and username ='" + mStrUserName + "' and timestart='" + mStrTimeStart + "'";
 
                 Statement stmt = mConnection.createStatement();
                 ResultSet rs = stmt.executeQuery(query);
 
-
-                int total = 0;
-                int success = 0;
-                int unSuccess = 0;
-                int countData = 0;
                 while (rs.next()) {
                     String strPing = rs.getString("ping");
-                    ping = (ping + Integer.parseInt(strPing)) / 2;
+                    mPing = (mPing + Integer.parseInt(strPing)) / 2;
 
-                    float pingline = Integer.parseInt(strPing);
+                    float mPingLine = Integer.parseInt(strPing);
 
                     String strTotal = rs.getString("total");
-                    total = (total + Integer.parseInt(strTotal)) / 2;
+                    mTotal = (mTotal + Integer.parseInt(strTotal)) / 2;
 
                     String strSuccess = rs.getString("success");
-                    success = (success + Integer.parseInt(strSuccess)) / 2;
+                    mSuccess = (mSuccess + Integer.parseInt(strSuccess)) / 2;
 
-                    unSuccess = total - success;
+                    float mTotalData = Integer.parseInt(strTotal);
+                    float mSuccessData = Integer.parseInt(strSuccess);
+                    float mUnSuccessData = mTotalData - mSuccessData;
+
+                    mUnSuccess = mTotal - mSuccess;
                     Log.i("kanna1", strPing);
                     Log.i("kanna2", strTotal);
                     Log.i("kanna3", strSuccess);
-                    countData++;
 
-                    mPingList.add(new Entry(countData, pingline));
+                    mCountData++;
 
+                    mPingList.add(new Entry(mCountData, mPingLine));
+                    mSuccessList.add(new Entry(mCountData, mSuccessData));
+                    mUnSuccessList.add(new Entry(mCountData, mUnSuccessData));
                 }
-                mLineChart();
-                handlingGraph(success, unSuccess, ping);
+                mLineChartPing();
+                mLineChartPacket();
+                handlingGraph(mSuccess, mUnSuccess, mPing);
             }
         } catch (Exception ex) {
             Log.i("kanna", "Exceptions");
         }
-
     }
 
     private SpannableString generateCenterSpannableText(int value3) {
-
         SpannableString s = new SpannableString("ping: " + value3);
         s.setSpan(new RelativeSizeSpan(1f), 0, s.length(), 0);
         s.setSpan(new ForegroundColorSpan(this.getResources().getColor(R.color.colorPrimary)), 0, s.length(), 0);
@@ -143,7 +162,6 @@ public class GraphPingActivity extends AppCompatActivity { //implements OnChartG
     }
 
     private void handlingGraph(float value1, float value2, int value3) {
-
         if (value1 != 0) {
             mTotalList.add(new PieEntry(value1, "Thành công"));
         }
@@ -151,7 +169,7 @@ public class GraphPingActivity extends AppCompatActivity { //implements OnChartG
             mTotalList.add(new PieEntry(value2, "Thất bại"));
         }
 
-        mPieChart(mPieChartTotal, mTotalList, value3);
+        mPieChart(mPCTotal, mTotalList, value3);
     }
 
     private void mPieChart(PieChart pieChart, ArrayList arrayList, int value3) {
@@ -178,9 +196,10 @@ public class GraphPingActivity extends AppCompatActivity { //implements OnChartG
         l.setXEntrySpace(7f);
         l.setYEntrySpace(2f);
         l.setYOffset(2f);
+
         pieChart.setEntryLabelColor(this.getResources().getColor(R.color.colorPrimary));
         pieChart.setEntryLabelTextSize(12f);
-        PieDataSet dataSet = new PieDataSet(arrayList, "ping");
+        PieDataSet dataSet = new PieDataSet(arrayList, "Ping");
         dataSet.setDrawIcons(false);
         dataSet.setIconsOffset(new MPPointF(0, 40));
         dataSet.setSliceSpace(3f);
@@ -206,51 +225,91 @@ public class GraphPingActivity extends AppCompatActivity { //implements OnChartG
         final ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
         service.scheduleWithFixedDelay(new Runnable() {
             public void run() {
-
-                mTotalList.clear();
-                mPingList.clear();
-                mAddControl();
+                mLoadData();
                 Log.i("kannaok", "ok");
             }
         }, 0, 5, TimeUnit.MINUTES);
     }
 
-    private void mLineChart() {
+    private void mLineChartPing() {
+        mLCPing.setDragEnabled(true);
+        mLCPing.setSaveEnabled(false);
 
-//        mLineChartPing.setOnChartGestureListener(this);
-//        mLineChartPing.setOnChartValueSelectedListener(this);
+        Description description = new Description();
+        description.setTextColor(Color.BLACK);
+        description.setText("Data Ping");
+        description.setTextSize(10f);
+        mLCPing.setDescription(description);
 
-        mLineChartPing.setDragEnabled(true);
-        mLineChartPing.setSaveEnabled(false);
-
-        LimitLine mLimitLine = new LimitLine(ping, "Average");
+        LimitLine mLimitLine = new LimitLine(mPing, "Average");
         mLimitLine.setLineWidth(3f);
         mLimitLine.enableDashedLine(10f, 10f, 10f);
         mLimitLine.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
         mLimitLine.setTextSize(10f);
 
-        YAxis mYAxis = mLineChartPing.getAxisLeft();
+        YAxis mYAxis = mLCPing.getAxisLeft();
         mYAxis.removeAllLimitLines();
         mYAxis.addLimitLine(mLimitLine);
-        mYAxis.enableGridDashedLine(10f, 10f, 0f);
+        mYAxis.enableGridDashedLine(10f, 10f, 10f);
         mYAxis.setDrawLimitLinesBehindData(true);
 
-
-        LineDataSet mSetDataPing = new LineDataSet(mPingList, "Data Ping");
+        LineDataSet mSetDataPing = new LineDataSet(mPingList, "Ping");
         mSetDataPing.setFillAlpha(110);
         mSetDataPing.setLineWidth(5f);
         mSetDataPing.setValueTextSize(10f);
         mSetDataPing.setColor(this.getResources().getColor(R.color.blue));
         mSetDataPing.setValueTextColor(Color.RED);
 
-
         ArrayList<ILineDataSet> mDataSets = new ArrayList<>();
         mDataSets.add(mSetDataPing);
 
         LineData mLineData = new LineData(mDataSets);
-        mLineChartPing.setData(mLineData);
-
+        mLCPing.setData(mLineData);
     }
 
+    private void mLineChartPacket() {
+        mLCPacket.setDragEnabled(true);
+        mLCPacket.setSaveEnabled(false);
 
+        Description description = new Description();
+        description.setTextColor(Color.BLACK);
+        description.setText("Data Packet");
+        description.setTextSize(10f);
+        mLCPacket.setDescription(description);
+
+        LimitLine mLimitLine = new LimitLine(mTotal, "Total");
+        mLimitLine.setLineWidth(3f);
+        mLimitLine.enableDashedLine(10f, 10f, 10f);
+        mLimitLine.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
+        mLimitLine.setTextSize(10f);
+        mLimitLine.setLineColor(this.getResources().getColor(R.color.blue));
+
+        YAxis mYAxis = mLCPacket.getAxisLeft();
+        mYAxis.removeAllLimitLines();
+        mYAxis.addLimitLine(mLimitLine);
+        mYAxis.enableGridDashedLine(10f, 10f, 10f);
+        mYAxis.setDrawLimitLinesBehindData(true);
+
+        LineDataSet mSetDataSuccess = new LineDataSet(mSuccessList, "Success");
+        mSetDataSuccess.setFillAlpha(110);
+        mSetDataSuccess.setLineWidth(5f);
+        mSetDataSuccess.setValueTextSize(10f);
+        mSetDataSuccess.setColor(this.getResources().getColor(R.color.success));
+        mSetDataSuccess.setValueTextColor(Color.GREEN);
+
+        LineDataSet mSetDataUnSuccess = new LineDataSet(mUnSuccessList, "UnSuccess");
+        mSetDataUnSuccess.setFillAlpha(110);
+        mSetDataUnSuccess.setLineWidth(5f);
+        mSetDataUnSuccess.setValueTextSize(10f);
+        mSetDataUnSuccess.setColor(this.getResources().getColor(R.color.unsuccess));
+        mSetDataUnSuccess.setValueTextColor(Color.RED);
+
+        ArrayList<ILineDataSet> mDataSets = new ArrayList<>();
+        mDataSets.add(mSetDataSuccess);
+        mDataSets.add(mSetDataUnSuccess);
+
+        LineData mLineData = new LineData(mDataSets);
+
+        mLCPacket.setData(mLineData);
+    }
 }

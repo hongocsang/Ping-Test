@@ -60,7 +60,7 @@ public class AddPingActivity extends AppCompatActivity implements View.OnClickLi
 
         mConnetArduino();
 
-        mTimeStart();
+        //mTimeStart();
     }
 
     private void mConnetArduino() {
@@ -146,6 +146,12 @@ public class AddPingActivity extends AppCompatActivity implements View.OnClickLi
                         ResultSet rs = stmt.executeQuery(query);
                         if (rs.next()) {
                             //send
+                            mTimeStart();
+                            client.publish(idArduino + "/timestart",
+                                    mStrTimeStart.getBytes(),
+                                    0,
+                                    false);
+
                             client.publish(idArduino + "/user",
                                     mEdtUserName.getText().toString().getBytes(),
                                     0,
@@ -163,12 +169,6 @@ public class AddPingActivity extends AppCompatActivity implements View.OnClickLi
 
                             client.publish(idArduino + "/time",
                                     mEdtTime.getText().toString().getBytes(),
-                                    0,
-                                    false);
-
-                            mTimeStart();
-                            client.publish(idArduino + "/timestart",
-                                    mStrTimeStart.getBytes(),
                                     0,
                                     false);
 

@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:weightSum="2"
     tools:context=".Activity.GraphPingActivity">
 
     <TextView
@@ -19,20 +18,39 @@
         android:textSize="24sp"
         android:text="user"/>
 
-    <com.github.mikephil.charting.charts.PieChart
-        android:id="@+id/pc_total"
-        android:layout_margin="4dp"
-        android:layout_weight="1"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </com.github.mikephil.charting.charts.PieChart>
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
 
-    <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/lc_ping"
-        android:layout_margin="4dp"
-        android:layout_weight="1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </com.github.mikephil.charting.charts.LineChart>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/pc_total"
+                android:layout_margin="4dp"
+                android:layout_width="match_parent"
+                android:layout_height="250dp">
+            </com.github.mikephil.charting.charts.PieChart>
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/lc_ping"
+                android:layout_margin="4dp"
+                android:layout_width="match_parent"
+                android:layout_height="250dp">
+            </com.github.mikephil.charting.charts.LineChart>
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/lc_packet"
+                android:layout_margin="4dp"
+                android:layout_width="match_parent"
+                android:layout_height="250dp">
+            </com.github.mikephil.charting.charts.LineChart>
+
+        </LinearLayout>
+
+    </ScrollView>
 
 </LinearLayout>

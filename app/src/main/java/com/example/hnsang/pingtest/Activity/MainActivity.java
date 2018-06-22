@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
@@ -28,7 +29,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener{
 
     private Toolbar mToolbar;
     private DrawerLayout mDrawer;
@@ -44,9 +45,6 @@ public class MainActivity extends AppCompatActivity
         mAddControls();
 
     }
-
-
-
 
     private void mAddControls() {
         mToolbar = findViewById(R.id.toolbar);
@@ -74,14 +72,14 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    @Override
-    public void onBackPressed() {
-        if (mDrawer.isDrawerOpen(GravityCompat.START)) {
-            mDrawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
+//    @Override
+//    public void onBackPressed() {
+//        if (mDrawer.isDrawerOpen(GravityCompat.START)) {
+//            mDrawer.closeDrawer(GravityCompat.START);
+//        } else {
+//            super.onBackPressed();
+//        }
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -110,6 +108,7 @@ public class MainActivity extends AppCompatActivity
         switch (id) {
             case R.id.nav_home:
                 fragment = new HomeFragment();
+
                 break;
             case R.id.nav_info:
                 fragment = new InformationFragment();
@@ -117,7 +116,6 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_log_out:
                 mLogOut();
                 break;
-
                 default: fragment = new HomeFragment();
         }
         if (fragment != null){
@@ -127,8 +125,8 @@ public class MainActivity extends AppCompatActivity
             p.setAnchorId(View.NO_ID);
             fab.setLayoutParams(p);
             fragmentTransaction.replace(R.id.content_main,fragment);
-            fragmentTransaction.detach(fragment);
-            fragmentTransaction.attach(fragment);
+//            fragmentTransaction.detach(fragment);
+//            fragmentTransaction.attach(fragment);
             fragmentTransaction.commit();
             if(id == R.id.nav_home){
                 fab.show();
@@ -168,8 +166,7 @@ public class MainActivity extends AppCompatActivity
         editor.apply();
 
         Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-        startActivity(intent);
         finish();
+        startActivity(intent);
     }
-
 }

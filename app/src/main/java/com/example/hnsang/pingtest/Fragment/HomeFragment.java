@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -95,15 +96,5 @@ public class HomeFragment extends Fragment {
         Log.i("hinataa","okkk");
         //reload();
     }
-//    private void reload(){
-//        final Timer t = new Timer();
-//        t.schedule(new TimerTask() {
-//            public void run() {
-//
-//
-//                Log.i("hinataa","ok");
-//                t.cancel();
-//            }
-//        }, 5000);
-//    }
+
 }
