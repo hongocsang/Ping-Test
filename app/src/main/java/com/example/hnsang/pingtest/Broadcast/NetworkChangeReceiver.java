@@ -1,5 +1,6 @@
 package com.example.hnsang.pingtest.Broadcast;
 
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +19,9 @@ import com.example.hnsang.pingtest.Database.ConnectionDB;
 import java.sql.Connection;
 
 public class NetworkChangeReceiver extends BroadcastReceiver {
+
+    ProgressDialog showDialog;
+
     @Override
     public void onReceive(Context context, Intent intent) {
         // Get state of network
@@ -30,7 +34,6 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
         if (connectivityManager != null) {
             networkInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
             wifiInfo = connectivityManager.getNetworkInfo(connectivityManager.TYPE_WIFI);
-
         }
 
         // Check state of network
@@ -38,10 +41,15 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                 || wifiInfo != null && wifiInfo.isConnected())
                 && connection != null) {
             Log.i("himiwari", "on");
-            Intent intent1 = new Intent(context, LoginActivity.class);
-            context.startActivity(intent1);
+            //dialog progressDialog custom lại
+            intent = new Intent(context, LoginActivity.class);
+            context.startActivity(intent);
         }else {
-            Log.i("himiwari", "off");
+            showDialog = ProgressDialog.show(context,
+                    "Loading..",
+                    "Không có kết nối mạng, hãy kiểm tra lại kết nối mạng",
+                    true,
+                    false);
         }
     }
 }

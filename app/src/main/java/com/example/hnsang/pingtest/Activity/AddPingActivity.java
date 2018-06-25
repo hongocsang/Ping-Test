@@ -4,6 +4,7 @@ package com.example.hnsang.pingtest.Activity;
  */
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.hnsang.pingtest.Database.ConnectionDB;
@@ -37,6 +39,10 @@ public class AddPingActivity extends AppCompatActivity implements View.OnClickLi
     private EditText mEdtPacket;
     private EditText mEdtTime;
     private Button mBtnPing;
+    private Button mBtnTestArduino;
+    private Button mBtnRetype;
+    private TextView mTvStatusArduino;
+
 
     final String username = "obxynjsd";
     final String password = "MJzGK5ooAeCP";
@@ -89,9 +95,6 @@ public class AddPingActivity extends AppCompatActivity implements View.OnClickLi
 
                 }
             });
-            //send
-
-
         } catch (MqttException e) {
             e.printStackTrace();
         }
@@ -104,10 +107,30 @@ public class AddPingActivity extends AppCompatActivity implements View.OnClickLi
         mEdtTime = findViewById(R.id.edt_time);
 
         mBtnPing = findViewById(R.id.btn_ping);
+        mBtnTestArduino = findViewById(R.id.btn_test_arduino);
+        mBtnTestArduino.setText("kiểm tra");
+//        mBtnRetype = findViewById(R.id.btn_retype);
+
+        mTvStatusArduino = findViewById(R.id.tv_status_arduino);
+        mTvStatusArduino.setText("Hãy nhập tên thiết bị");
+
+
+        mEdtEnable(false);
+    }
+
+    private void mEdtEnable(boolean answer) {
+        mEdtUserName.setEnabled(answer);
+        mEdtPacket.setEnabled(answer);
+        mEdtTime.setEnabled(answer);
+
+        mBtnPing.setEnabled(answer);
+
+        //mTvStatusArduino.setEnabled(answer);
     }
 
     private void mAddEvents() {
         mBtnPing.setOnClickListener(this);
+        mBtnTestArduino.setOnClickListener(this);
     }
 
     @Override
@@ -116,6 +139,57 @@ public class AddPingActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.btn_ping:
                 mPing();
                 break;
+            case R.id.btn_test_arduino:
+                mTestArduino();
+                break;
+        }
+    }
+
+    private void mTestArduino() {
+        if (mBtnTestArduino.getText().equals("kiểm tra")) {
+            ConnectionDB connectionDB = new ConnectionDB();
+            Connection connection = connectionDB.CONN();
+            String idArduino = mEdtIdArduino.getText().toString();
+            try {
+                if (connection == null) {
+
+                } else {
+                    Log.i("hinata", "connect databases");
+                    String query = "select status from device where iddevice='" + idArduino + "'";
+                    Statement stmt = connection.createStatement();
+                    ResultSet rs = stmt.executeQuery(query);
+                    if (rs.next()) {
+                        switch (rs.getString("status")) {
+                            case "ON":
+                                mTvStatusArduino.setText("Thiết bị đang bật, bạn hãy thử với thiết bị khác");
+                                mBtnTestArduino.setText("nhập lại");
+                                mEdtIdArduino.setEnabled(false);
+                                break;
+                            case "OFF":
+                                mTvStatusArduino.setText("Thiết bị đã tắt, bạn hãy bật thiết bị lại");
+                                mBtnTestArduino.setText("nhập lại");
+                                mEdtIdArduino.setEnabled(false);
+                                break;
+                            case "READY":
+                                mTvStatusArduino.setText("Thiết bị đã sẵn sàng");
+                                mBtnTestArduino.setText("nhập lại");
+                                mEdtIdArduino.setEnabled(false);
+                                mEdtEnable(true);
+                                break;
+                        }
+                    } else {
+                        mTvStatusArduino.setText("Không tìm thấy thiết bị, bạn hãy thử với thiết bị khác");
+                        mBtnTestArduino.setText("nhập lại");
+                        mEdtIdArduino.setEnabled(false);
+                    }
+                }
+            } catch (Exception ex) {
+            }
+        } else {
+            mEdtEnable(false);
+            mBtnTestArduino.setText("kiểm tra");
+            mTvStatusArduino.setText("Hãy nhập tên thiết bị");
+            mEdtIdArduino.setEnabled(true);
         }
     }
 
@@ -173,6 +247,13 @@ public class AddPingActivity extends AppCompatActivity implements View.OnClickLi
                                     false);
 
                             Log.i("hinata", "ok");
+                            Intent intent = new Intent(AddPingActivity.this, MainActivity.class);
+                            finish();
+                            Toast.makeText(this, "Thiết bị đang ping, bạn hãy chờ khoảng "
+                                    + mEdtTime.getText().toString() +
+                                    " phút để có dữ liệu của thiết bị", Toast.LENGTH_LONG).show();
+
+                            startActivity(intent);
                         } else {
                             Log.i("hinata", "no ok");
                         }
@@ -194,6 +275,6 @@ public class AddPingActivity extends AppCompatActivity implements View.OnClickLi
         mSimpleTimeFormat = new SimpleDateFormat(mStrTimeFormat);
         Log.i("kanna2", mSimpleTimeFormat.format(date));
         mStrTimeStart = mSimpleDateFormat.format(date) + "%20" + mSimpleTimeFormat.format(date);
-        Log.i("kanna3",mStrTimeStart);
+        Log.i("kanna3", mStrTimeStart);
     }
 }

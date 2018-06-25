@@ -1,7 +1,9 @@
 package com.example.hnsang.pingtest.Activity;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
@@ -16,6 +18,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.hnsang.pingtest.Broadcast.NetworkChangeReceiver;
 import com.example.hnsang.pingtest.Database.ConnectionDB;
 import com.example.hnsang.pingtest.Object.Constant;
 import com.example.hnsang.pingtest.R;
@@ -39,7 +42,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private boolean mIsShow = false;
 
-    private ProgressDialog progressDialog;
+    private BroadcastReceiver receiver;
 
     private ConnectionDB connectionDB = new ConnectionDB();
     private Connection con = connectionDB.CONN();
@@ -197,5 +200,26 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         password = password.trim();
         return !password.equals("") && password.length() >= 6;
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // Decalre & register broadcast receiver.
+        receiver = new NetworkChangeReceiver();
+        IntentFilter filter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+        registerReceiver(receiver, filter);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(receiver);
+    }
+//    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//        // Unregister receiver when activity is destroyed.
+//        unregisterReceiver(receiver);
+//    }
 }
 

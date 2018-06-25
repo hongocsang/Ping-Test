@@ -1,7 +1,9 @@
 package com.example.hnsang.pingtest.Activity;
 
 
+import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
@@ -20,6 +22,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.hnsang.pingtest.Broadcast.NetworkChangeReceiver;
 import com.example.hnsang.pingtest.Fragment.HomeFragment;
 import com.example.hnsang.pingtest.Fragment.InformationFragment;
 import com.example.hnsang.pingtest.Object.Constant;
@@ -35,6 +38,9 @@ public class MainActivity extends AppCompatActivity
     private DrawerLayout mDrawer;
     private NavigationView mNavigationView;
     private FloatingActionButton mFab;
+
+    private BroadcastReceiver receiver;
+
 
 
     @Override
@@ -169,4 +175,19 @@ public class MainActivity extends AppCompatActivity
         finish();
         startActivity(intent);
     }
+
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        // Decalre & register broadcast receiver.
+//        receiver = new NetworkChangeReceiver();
+//        IntentFilter filter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+//        registerReceiver(receiver, filter);
+//    }
+//
+//    @Override
+//    protected void onStop() {
+//        super.onStop();
+//        unregisterReceiver(receiver);
+//    }
 }

@@ -6,83 +6,118 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".Activity.AddPingActivity">
-
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <android.support.design.widget.TextInputLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp">
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
 
-            <EditText
-                android:inputType="number"
-                android:id="@+id/edt_id_arduino"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="ID Arduino"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:textStyle="bold" />
-        </android.support.design.widget.TextInputLayout>
+                android:orientation="horizontal"
+                android:weightSum="16">
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp">
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:layout_weight="16">
 
-            <EditText
-                android:id="@+id/edt_username"
+                    <EditText
+                        android:inputType="number"
+                        android:id="@+id/edt_id_arduino"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="ID Arduino"
+                        android:textStyle="bold" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+
+                    android:layout_margin="4dp"
+                    android:id="@+id/btn_test_arduino"/>
+
+                <!--<Button-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:id="@+id/btn_retype"-->
+                    <!--android:text="nhập lại"/>-->
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_status_arduino"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="User Name"
-                android:inputType="text"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:textStyle="bold" />
-        </android.support.design.widget.TextInputLayout>
+                android:layout_margin="16dp"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:gravity="center" />
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp">
-
-            <EditText
-                android:id="@+id/edt_packet"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Packet"
-                android:inputType="number"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:textStyle="bold" />
-        </android.support.design.widget.TextInputLayout>
+                android:layout_margin="16dp">
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp">
+                <EditText
+                    android:id="@+id/edt_username"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="User Name"
+                    android:inputType="text"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:textStyle="bold" />
+            </android.support.design.widget.TextInputLayout>
 
-            <EditText
-                android:id="@+id/edt_time"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Time (minute)"
-                android:inputType="number"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:textStyle="bold" />
-        </android.support.design.widget.TextInputLayout>
+                android:layout_margin="16dp">
 
-        <Button
-            android:id="@+id/btn_ping"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="PING"/>
+                <EditText
+                    android:id="@+id/edt_packet"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Packet"
+                    android:inputType="number"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:textStyle="bold" />
+            </android.support.design.widget.TextInputLayout>
 
-    </LinearLayout>
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp">
+
+                <EditText
+                    android:id="@+id/edt_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Time (minute)"
+                    android:inputType="number"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:textStyle="bold" />
+            </android.support.design.widget.TextInputLayout>
+
+            <Button
+                android:id="@+id/btn_ping"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PING"/>
+
+        </LinearLayout>
+
+    </ScrollView>
 
 </LinearLayout>
