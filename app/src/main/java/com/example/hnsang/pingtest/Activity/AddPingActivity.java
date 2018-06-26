@@ -133,6 +133,14 @@ public class AddPingActivity extends AppCompatActivity implements View.OnClickLi
         mBtnTestArduino.setOnClickListener(this);
     }
 
+    public void mCheckEdtIdArduino() {
+        if (!mEdtIdArduino.getText().equals("")) {
+            mTestArduino();
+        } else {
+            mTvStatusArduino.setText("Chưa nhập tên thiết bị");
+        }
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -140,7 +148,8 @@ public class AddPingActivity extends AppCompatActivity implements View.OnClickLi
                 mPing();
                 break;
             case R.id.btn_test_arduino:
-                mTestArduino();
+                //mTestArduino();
+                mCheckEdtIdArduino();
                 break;
         }
     }
@@ -152,7 +161,7 @@ public class AddPingActivity extends AppCompatActivity implements View.OnClickLi
             String idArduino = mEdtIdArduino.getText().toString();
             try {
                 if (connection == null) {
-
+                    //not connect
                 } else {
                     Log.i("hinata", "connect databases");
                     String query = "select status from device where iddevice='" + idArduino + "'";
@@ -203,7 +212,7 @@ public class AddPingActivity extends AppCompatActivity implements View.OnClickLi
             SharedPreferences sharedPreferences = getSharedPreferences(Constant.PREFERENCE_NAME, MODE_PRIVATE);
             String idnv = sharedPreferences.getString(Constant.PREFERENCE_KEY_ID, "");
 
-            if (idnv != null) {
+            if (idnv != null && mCheckEdtPacket() && mCheckEdtTime() && mCheckEdtUserName()) {
                 progressDialog.show();
                 ConnectionDB connectionDB = new ConnectionDB();
                 Connection connection = connectionDB.CONN();
@@ -264,7 +273,70 @@ public class AddPingActivity extends AppCompatActivity implements View.OnClickLi
                     Toast.makeText(this, "Exceptions", Toast.LENGTH_SHORT).show();
                     Log.i("hinata", "Exceptions");
                 }
+            }//else {
+                //Toast.makeText(this, "Bạn chưa nhập đầy đủ các thông tin", Toast.LENGTH_SHORT).show();
+            //}
+        }
+    }
+
+    public boolean mCheckEdtUserName() {
+        ConnectionDB connectionDB = new ConnectionDB();
+        Connection connection = connectionDB.CONN();
+        String strUserName = mEdtUserName.getText().toString();
+        if (!mEdtUserName.getText().toString().equals("")) {
+            try {
+                if (connection == null) {
+                    return false;
+                } else {
+                    Log.i("hinata", "connect databases");
+                    String query = "select idcustomer from customer where idcustomer='" + strUserName + "'";
+                    Statement stmt = connection.createStatement();
+                    ResultSet rs = stmt.executeQuery(query);
+                    if (rs.next()) {
+                        return true;
+                    } else {
+                        Toast.makeText(this, "Bạn nhập sai tên người dùng", Toast.LENGTH_SHORT).show();
+                        return false;
+                    }
+                }
+            } catch (Exception ex) {
+                return false;
             }
+        }else {
+            Toast.makeText(this, "Bạn chưa nhập tên người dùng", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+    }
+
+    public boolean mCheckEdtPacket(){
+        if(!mEdtPacket.getText().toString().equals("")){
+            if( 50 <= Integer.parseInt(mEdtPacket.getText().toString())
+                    && Integer.parseInt(mEdtPacket.getText().toString()) <= 1000){
+                return true;
+            }else {
+                Toast.makeText(this, "Số gói tin không nằm trong khoảng 50-1000", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        } else {
+            Toast.makeText(this, "Bạn chưa nhập số gói tin", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+    }
+
+    public boolean mCheckEdtTime(){
+        if(!mEdtTime.getText().toString().equals("")) {
+
+            if (5 <= Integer.parseInt(mEdtTime.getText().toString())
+                    && Integer.parseInt(mEdtTime.getText().toString()) <= 30) {
+                return true;
+            } else {
+                Toast.makeText(this, "Thời gian delay không nằm trong khoảng 5-30 phút", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        }else {
+            Toast.makeText(this, "Bạn chưa nhập thời gian delay", Toast.LENGTH_SHORT).show();
+            return false;
         }
     }
 

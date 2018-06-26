@@ -201,20 +201,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         return !password.equals("") && password.length() >= 6;
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        // Decalre & register broadcast receiver.
-        receiver = new NetworkChangeReceiver();
-        IntentFilter filter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
-        registerReceiver(receiver, filter);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        unregisterReceiver(receiver);
-    }
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        // Decalre & register broadcast receiver.
+//        receiver = new NetworkChangeReceiver();
+//        IntentFilter filter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+//        registerReceiver(receiver, filter);
+//    }
+//
+//    @Override
+//    protected void onStop() {
+//        super.onStop();
+//        unregisterReceiver(receiver);
+//    }
 //    @Override
 //    protected void onDestroy() {
 //        super.onDestroy();
