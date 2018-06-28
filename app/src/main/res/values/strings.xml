@@ -29,4 +29,9 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
+
+    <string name="message_edit_and_save">Bạn chưa ping, bạn vẫn muốn thoát?</string>
+    <string name="message_positive_save">Thoát</string>
+    <string name="message_negative_save">Hủy</string>
+
 </resources>

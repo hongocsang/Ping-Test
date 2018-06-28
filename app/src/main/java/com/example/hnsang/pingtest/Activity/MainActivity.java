@@ -21,6 +21,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.example.hnsang.pingtest.Broadcast.NetworkChangeReceiver;
 import com.example.hnsang.pingtest.Fragment.HomeFragment;
@@ -41,6 +42,8 @@ public class MainActivity extends AppCompatActivity
 
     private BroadcastReceiver receiver;
 
+    private TextView mTVUserName;
+    private NavigationView navigationView;
 
 
     @Override
@@ -75,6 +78,14 @@ public class MainActivity extends AppCompatActivity
         mNavigationView.setNavigationItemSelectedListener(this);
 
         mDisplaySelectScreen(R.id.nav_home);
+
+        navigationView = findViewById(R.id.nav_view);
+        View view =  navigationView.getHeaderView(0);
+        mTVUserName = view.findViewById(R.id.tv_username);
+
+        SharedPreferences preferences = this.getSharedPreferences(Constant.PREFERENCE_NAME, this.MODE_PRIVATE);
+        final String id = preferences.getString(Constant.PREFERENCE_KEY_ID, null);
+        mTVUserName.setText(id);
     }
 
 

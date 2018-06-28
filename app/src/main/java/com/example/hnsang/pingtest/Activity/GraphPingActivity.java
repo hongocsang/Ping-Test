@@ -168,7 +168,6 @@ public class GraphPingActivity extends AppCompatActivity {
         if (value2 != 0) {
             mTotalList.add(new PieEntry(value2, "Thất bại"));
         }
-
         mPieChart(mPCTotal, mTotalList, value3);
     }
 

@@ -16,6 +16,8 @@ import com.example.hnsang.pingtest.Object.Constant;
 import com.example.hnsang.pingtest.Object.DataObject;
 import com.example.hnsang.pingtest.Object.MainDataObject;
 import com.example.hnsang.pingtest.R;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -83,5 +85,11 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder
             tvTimeStart = itemView.findViewById(R.id.tv_time);
             cvData = itemView.findViewById(R.id.cv_data);
         }
+    }
+
+    public void setFilter(List<MainDataObject> listDatas) {
+        listData = new ArrayList<>();
+        listData.addAll(listDatas);
+        notifyDataSetChanged();
     }
 }

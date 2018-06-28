@@ -7,10 +7,15 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -34,7 +39,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment{ //implements SearchView.OnQueryTextListener {
 
     private RecyclerView rvData;
     private List<MainDataObject> listData;
@@ -44,6 +49,11 @@ public class HomeFragment extends Fragment {
 
     private ConnectionDB mConnectionDB = new ConnectionDB();
     private Connection mConnection = mConnectionDB.CONN();
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     public HomeFragment() {
 
@@ -60,6 +70,9 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
         super.onViewCreated(view, savedInstanceState);
+
+        setHasOptionsMenu(true);
+
         getActivity().setTitle("Home");
 
         rvData = rootView.findViewById(R.id.rv_data);
@@ -97,4 +110,52 @@ public class HomeFragment extends Fragment {
         //reload();
     }
 
+//    @Override
+//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        super.onCreateOptionsMenu(menu, inflater);
+//        inflater.inflate(R.menu.search_view, menu);
+//        MenuItem item = menu.findItem(R.id.search_view);
+//        SearchView searchView = new SearchView(((MainActivity) getActivity()).getSupportActionBar().getThemedContext());
+//        searchView.setOnQueryTextListener(this);
+//            MenuItemCompat.setOnActionExpandListener(item,
+//                new MenuItemCompat.OnActionExpandListener() {
+//                    @Override
+//                    public boolean onMenuItemActionCollapse(MenuItem item) {
+//                        // Do something when collapsed
+//                        dataAdapter.setFilter(listData);
+//                        return true; // Return true to collapse action view
+//                    }
+//
+//                    @Override
+//                    public boolean onMenuItemActionExpand(MenuItem item) {
+//                        // Do something when expanded
+//                        return true; // Return true to expand action view
+//                    }
+//                });
+//    }
+//
+//    @Override
+//    public boolean onQueryTextChange(String newText) {
+//        final List<MainDataObject> filteredModelList = filter(listData,newText);
+//        dataAdapter.setFilter(filteredModelList);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onQueryTextSubmit(String query) {
+//        return false;
+//    }
+//
+//    private List<MainDataObject> filter(List<MainDataObject> models, String query) {
+//        query = query.toLowerCase();
+//        final List<MainDataObject> filteredModelList = new ArrayList<>();
+//        for (MainDataObject model : models) {
+//            final String text = model.getIdDevice().toLowerCase();
+//            Log.i("itachi",""+text);
+//            if (text.contains(query)) {
+//                filteredModelList.add(model);
+//            }
+//        }
+//        return filteredModelList;
+//    }
 }

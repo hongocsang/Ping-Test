@@ -4,8 +4,10 @@ package com.example.hnsang.pingtest.Activity;
  */
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -40,7 +42,6 @@ public class AddPingActivity extends AppCompatActivity implements View.OnClickLi
     private EditText mEdtTime;
     private Button mBtnPing;
     private Button mBtnTestArduino;
-    private Button mBtnRetype;
     private TextView mTvStatusArduino;
 
 
@@ -274,7 +275,7 @@ public class AddPingActivity extends AppCompatActivity implements View.OnClickLi
                     Log.i("hinata", "Exceptions");
                 }
             }//else {
-                //Toast.makeText(this, "Bạn chưa nhập đầy đủ các thông tin", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "Bạn chưa nhập đầy đủ các thông tin", Toast.LENGTH_SHORT).show();
             //}
         }
     }
@@ -302,18 +303,18 @@ public class AddPingActivity extends AppCompatActivity implements View.OnClickLi
             } catch (Exception ex) {
                 return false;
             }
-        }else {
+        } else {
             Toast.makeText(this, "Bạn chưa nhập tên người dùng", Toast.LENGTH_SHORT).show();
             return false;
         }
     }
 
-    public boolean mCheckEdtPacket(){
-        if(!mEdtPacket.getText().toString().equals("")){
-            if( 50 <= Integer.parseInt(mEdtPacket.getText().toString())
-                    && Integer.parseInt(mEdtPacket.getText().toString()) <= 1000){
+    public boolean mCheckEdtPacket() {
+        if (!mEdtPacket.getText().toString().equals("")) {
+            if (50 <= Integer.parseInt(mEdtPacket.getText().toString())
+                    && Integer.parseInt(mEdtPacket.getText().toString()) <= 1000) {
                 return true;
-            }else {
+            } else {
                 Toast.makeText(this, "Số gói tin không nằm trong khoảng 50-1000", Toast.LENGTH_SHORT).show();
                 return false;
             }
@@ -324,8 +325,8 @@ public class AddPingActivity extends AppCompatActivity implements View.OnClickLi
 
     }
 
-    public boolean mCheckEdtTime(){
-        if(!mEdtTime.getText().toString().equals("")) {
+    public boolean mCheckEdtTime() {
+        if (!mEdtTime.getText().toString().equals("")) {
 
             if (5 <= Integer.parseInt(mEdtTime.getText().toString())
                     && Integer.parseInt(mEdtTime.getText().toString()) <= 30) {
@@ -334,7 +335,7 @@ public class AddPingActivity extends AppCompatActivity implements View.OnClickLi
                 Toast.makeText(this, "Thời gian delay không nằm trong khoảng 5-30 phút", Toast.LENGTH_SHORT).show();
                 return false;
             }
-        }else {
+        } else {
             Toast.makeText(this, "Bạn chưa nhập thời gian delay", Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -348,5 +349,40 @@ public class AddPingActivity extends AppCompatActivity implements View.OnClickLi
         Log.i("kanna2", mSimpleTimeFormat.format(date));
         mStrTimeStart = mSimpleDateFormat.format(date) + "%20" + mSimpleTimeFormat.format(date);
         Log.i("kanna3", mStrTimeStart);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mEdtUserName.getText().toString().equals("")
+                && mEdtIdArduino.getText().toString().equals("")
+                && mEdtPacket.getText().toString().equals("")
+                && mEdtTime.getText().toString().equals("")) {
+            finish();
+        } else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setCancelable(false);
+
+            builder.setMessage(getString(R.string.message_edit_and_save));
+
+            builder.setPositiveButton(getString(R.string.message_positive_save), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    finish();
+                }
+            });
+
+            builder.setNegativeButton(getString(R.string.message_negative_save), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
+    }
+
+    private void mCheckEditNull(){
+        // kiểm tra các trường hợp không nhập edt
     }
 }
