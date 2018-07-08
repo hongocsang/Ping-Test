@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -139,6 +140,7 @@ public class AddPingActivity extends AppCompatActivity implements View.OnClickLi
             mTestArduino();
         } else {
             mTvStatusArduino.setText("Chưa nhập tên thiết bị");
+            mTvStatusArduino.setTextColor(Color.RED);
         }
     }
 
@@ -172,16 +174,19 @@ public class AddPingActivity extends AppCompatActivity implements View.OnClickLi
                         switch (rs.getString("status")) {
                             case "ON":
                                 mTvStatusArduino.setText("Thiết bị đang bật, bạn hãy thử với thiết bị khác");
+                                mTvStatusArduino.setTextColor(Color.GREEN);
                                 mBtnTestArduino.setText("nhập lại");
                                 mEdtIdArduino.setEnabled(false);
                                 break;
                             case "OFF":
                                 mTvStatusArduino.setText("Thiết bị đã tắt, bạn hãy bật thiết bị lại");
+                                mTvStatusArduino.setTextColor(Color.BLACK);
                                 mBtnTestArduino.setText("nhập lại");
                                 mEdtIdArduino.setEnabled(false);
                                 break;
                             case "READY":
                                 mTvStatusArduino.setText("Thiết bị đã sẵn sàng");
+                                mTvStatusArduino.setTextColor(Color.BLUE);
                                 mBtnTestArduino.setText("nhập lại");
                                 mEdtIdArduino.setEnabled(false);
                                 mEdtEnable(true);
@@ -189,6 +194,7 @@ public class AddPingActivity extends AppCompatActivity implements View.OnClickLi
                         }
                     } else {
                         mTvStatusArduino.setText("Không tìm thấy thiết bị, bạn hãy thử với thiết bị khác");
+                        mTvStatusArduino.setTextColor(Color.RED);
                         mBtnTestArduino.setText("nhập lại");
                         mEdtIdArduino.setEnabled(false);
                     }
@@ -328,7 +334,7 @@ public class AddPingActivity extends AppCompatActivity implements View.OnClickLi
     public boolean mCheckEdtTime() {
         if (!mEdtTime.getText().toString().equals("")) {
 
-            if (5 <= Integer.parseInt(mEdtTime.getText().toString())
+            if (1 <= Integer.parseInt(mEdtTime.getText().toString())
                     && Integer.parseInt(mEdtTime.getText().toString()) <= 30) {
                 return true;
             } else {
@@ -383,6 +389,6 @@ public class AddPingActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void mCheckEditNull(){
-        // kiểm tra các trường hợp không nhập edt
+        // kiểm tra các trường hợp không nhập edt Toast messenger
     }
 }

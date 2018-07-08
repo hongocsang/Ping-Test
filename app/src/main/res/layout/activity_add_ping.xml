@@ -5,10 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".Activity.AddPingActivity">
+    tools:context=".Activity.AddPingActivity"
+    >
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@drawable/back_app">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -41,7 +43,8 @@
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-
+                    android:textColor="@color/white"
+                    android:background="@drawable/custom_button"
                     android:layout_margin="4dp"
                     android:id="@+id/btn_test_arduino"/>
 
@@ -114,7 +117,9 @@
                 android:id="@+id/btn_ping"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="PING"/>
+                android:background="@drawable/custom_button"
+                android:text="PING"
+                android:textColor="@color/white"/>
 
         </LinearLayout>
 

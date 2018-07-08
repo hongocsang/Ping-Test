@@ -97,7 +97,7 @@ public class GraphPingActivity extends AppCompatActivity {
         mTVUserName.setText(mStrUserName);
     }
 
-    private void mLoadData(){
+    private void mLoadData() {
         mTotalList.clear();
         mPingList.clear();
         mSuccessList.clear();
@@ -116,7 +116,7 @@ public class GraphPingActivity extends AppCompatActivity {
 
                 Statement stmt = mConnection.createStatement();
                 ResultSet rs = stmt.executeQuery(query);
-
+                int count = 1;
                 while (rs.next()) {
                     String strPing = rs.getString("ping");
                     mPing = (mPing + Integer.parseInt(strPing)) / 2;
@@ -124,7 +124,11 @@ public class GraphPingActivity extends AppCompatActivity {
                     float mPingLine = Integer.parseInt(strPing);
 
                     String strTotal = rs.getString("total");
-                    mTotal = (mTotal + Integer.parseInt(strTotal)) / 2;
+                    if (count != 1){
+                        mTotal = (mTotal + Integer.parseInt(strTotal)) / 2;
+                    }else {
+                        mTotal = (mTotal + Integer.parseInt(strTotal));
+                    }
 
                     String strSuccess = rs.getString("success");
                     mSuccess = (mSuccess + Integer.parseInt(strSuccess)) / 2;
@@ -139,6 +143,7 @@ public class GraphPingActivity extends AppCompatActivity {
                     Log.i("kanna3", strSuccess);
 
                     mCountData++;
+                    count++;
 
                     mPingList.add(new Entry(mCountData, mPingLine));
                     mSuccessList.add(new Entry(mCountData, mSuccessData));
